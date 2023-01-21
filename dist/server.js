@@ -64,7 +64,6 @@ const cmdController = (ws, data) => __awaiter(void 0, void 0, void 0, function* 
             break;
         case cmd[0].startsWith('draw'):
             nut.mouse.config.mouseSpeed = 200;
-            // check screen boundries
             switch (cmd[0].substring(5)) {
                 case 'square':
                     yield nut.mouse.pressButton(nut.Button.LEFT);
@@ -80,6 +79,31 @@ const cmdController = (ws, data) => __awaiter(void 0, void 0, void 0, function* 
                     yield nut.mouse.move(nut.down(+cmd[2]));
                     yield nut.mouse.move(nut.left(+cmd[1]));
                     yield nut.mouse.move(nut.up(+cmd[2]));
+                    yield nut.mouse.releaseButton(nut.Button.LEFT);
+                    break;
+                case 'circle':
+                    const radius = +cmd[1];
+                    yield nut.mouse.pressButton(nut.Button.LEFT);
+                    let { x: curX, y: curY } = yield nut.mouse.getPosition();
+                    const centerX = curX + radius;
+                    const centerY = curY;
+                    console.log(centerX, centerY);
+                    for (let angle = 0, newX, newY; angle <= 360; angle++) {
+                        newX = Math.round(centerX +
+                            radius *
+                                Math.cos((Math.PI * (angle + 180)) / 180));
+                        newY = Math.round(centerY +
+                            radius *
+                                Math.sin((Math.PI * (angle + 180)) / 180));
+                        if (Math.abs(newX - curX) || Math.abs(newY - curY)) {
+                            yield nut.mouse.move(nut.straightTo({ x: newX, y: newY }));
+                            console.log(newX, newY);
+                        }
+                        (curX = newX), (curY = curY);
+                    }
+                    // await nut.mouse.move(nut.down(+cmd[2]));
+                    // await nut.mouse.move(nut.left(+cmd[1]));
+                    // await nut.mouse.move(nut.up(+cmd[2]));
                     yield nut.mouse.releaseButton(nut.Button.LEFT);
                     break;
             }
