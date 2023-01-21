@@ -67,9 +67,27 @@ const cmdController = async (ws: WebSocket, data: RawData) => {
             res = `prnt_scrn ${pngImage.toString('base64')}`;
             break;
         case cmd[0].startsWith('draw'):
+            nut.mouse.config.mouseSpeed = 200;
+            // check screen boundries
             switch (cmd[0].substring(5)) {
-                case 'circle':
+                case 'square':
+                    await nut.mouse.pressButton(nut.Button.LEFT);
+                    await nut.mouse.move(nut.right(+cmd[1]));
+                    await nut.mouse.move(nut.down(+cmd[1]));
+                    await nut.mouse.move(nut.left(+cmd[1]));
+                    await nut.mouse.move(nut.up(+cmd[1]));
+                    await nut.mouse.releaseButton(nut.Button.LEFT);
+                    break;
+                case 'rectangle':
+                    await nut.mouse.pressButton(nut.Button.LEFT);
+                    await nut.mouse.move(nut.right(+cmd[1]));
+                    await nut.mouse.move(nut.down(+cmd[2]));
+                    await nut.mouse.move(nut.left(+cmd[1]));
+                    await nut.mouse.move(nut.up(+cmd[2]));
+                    await nut.mouse.releaseButton(nut.Button.LEFT);
+                    break;
             }
+            nut.mouse.config.mouseSpeed = 200;
             break;
     }
     ws.send(res);
