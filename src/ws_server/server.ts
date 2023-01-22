@@ -1,11 +1,12 @@
-import { WebSocket, WebSocketServer, RawData } from 'ws';
+import { WebSocketServer, createWebSocketStream } from 'ws';
 import * as nut from '@nut-tree/nut-js';
 import Jimp from 'jimp';
+import * as stream from 'node:stream';
 
 const wss = new WebSocketServer({ port: 8080 });
 
-const cmdController = async (ws: WebSocket, data: RawData) => {
-    let res = String(data);
+const cmdController = async (ws: stream.Duplex, data: string) => {
+    let res = data;
     const cmd = res.split(/\s+/);
     switch (true) {
         case cmd[0].startsWith('mouse'):
@@ -92,7 +93,6 @@ const cmdController = async (ws: WebSocket, data: RawData) => {
                         await nut.mouse.getPosition();
                     const centerX = curX + radius;
                     const centerY = curY;
-                    console.log(centerX, centerY);
                     for (let angle = 0, newX, newY; angle <= 360; angle++) {
                         newX = Math.round(
                             centerX +
@@ -108,25 +108,29 @@ const cmdController = async (ws: WebSocket, data: RawData) => {
                             await nut.mouse.move(
                                 nut.straightTo({ x: newX, y: newY })
                             );
-                            console.log(newX, newY);
                         }
                         (curX = newX), (curY = curY);
                     }
-                    // await nut.mouse.move(nut.down(+cmd[2]));
-                    // await nut.mouse.move(nut.left(+cmd[1]));
-                    // await nut.mouse.move(nut.up(+cmd[2]));
                     await nut.mouse.releaseButton(nut.Button.LEFT);
                     break;
             }
             nut.mouse.config.mouseSpeed = 200;
             break;
     }
-    ws.send(res);
+    ws.write(res);
 };
 
 wss.on('connection', function connection(ws) {
-    ws.on('message', function message(data) {
-        console.log('received: %s', data);
-        cmdController(ws, data);
+    const wsStream = createWebSocketStream(ws, {
+        //        encoding: 'utf-8',
+        decodeStrings: false,
+    });
+    wsStream.on('data', function message(data) {
+        console.log('received: %s', data.toString());
+        cmdController(wsStream, data.toString());
+    });
+    wsStream.on('end', function message() {});
+    wsStream.on('error', function message(err) {
+        console.log(err.message);
     });
 });
