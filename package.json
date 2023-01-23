@@ -6,17 +6,16 @@
     "type": "module",
     "scripts": {
         "start": "node ./dist/index.js",
-        "start:front": "node ./index.js",
-        "start:dev:front": "nodemon ./index.js",
-        "start:dev:wss": "nodemon ./dist/index.js",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "start:dev": "nodemon ./dist/index.js",
+        "build": "npx tsc"
     },
     "author": "Andrei Auchynnikau",
     "keywords": [],
     "license": "ISC",
     "devDependencies": {
         "@types/ws": "^8.5.4",
-        "nodemon": "^2.0.16"
+        "nodemon": "^2.0.16",
+        "typescript": "^4.9.4"
     },
     "dependencies": {
         "@nut-tree/nut-js": "^2.3.0",
