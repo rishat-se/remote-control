@@ -35,7 +35,7 @@ export const prntscrnCmdHandler = () => __awaiter(void 0, void 0, void 0, functi
         data: screenRGB.data,
         width: screenRGB.width,
         height: screenRGB.height,
-    }, (err, image) => { });
+    });
     const pngImage = yield image.getBufferAsync(Jimp.MIME_PNG);
     return `prnt_scrn ${pngImage.toString('base64')}`;
 });

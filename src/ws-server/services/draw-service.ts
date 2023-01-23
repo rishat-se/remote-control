@@ -26,12 +26,10 @@ export const drawCmdHandler = async (cmd: string[]) => {
             const centerX = curX + radius;
             const centerY = curY;
             await nut.mouse.pressButton(nut.Button.LEFT);
-            for (let angle = 0, newX, newY; angle <= 360; angle++) {
+            for (let angle = 0, newX, newY; angle <= 360; angle += 10) {
                 newX = Math.round(centerX + radius * Math.cos((Math.PI * (angle + 180)) / 180));
                 newY = Math.round(centerY + radius * Math.sin((Math.PI * (angle + 180)) / 180));
-                if (Math.abs(newX - curX) || Math.abs(newY - curY)) {
-                    await nut.mouse.move(nut.straightTo({ x: newX, y: newY }));
-                }
+                await nut.mouse.move(nut.straightTo({ x: newX, y: newY }));
                 (curX = newX), (curY = curY);
             }
             await nut.mouse.releaseButton(nut.Button.LEFT);

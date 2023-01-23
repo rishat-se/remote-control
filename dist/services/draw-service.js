@@ -33,12 +33,10 @@ export const drawCmdHandler = (cmd) => __awaiter(void 0, void 0, void 0, functio
             const centerX = curX + radius;
             const centerY = curY;
             yield nut.mouse.pressButton(nut.Button.LEFT);
-            for (let angle = 0, newX, newY; angle <= 360; angle++) {
+            for (let angle = 0, newX, newY; angle <= 360; angle += 10) {
                 newX = Math.round(centerX + radius * Math.cos((Math.PI * (angle + 180)) / 180));
                 newY = Math.round(centerY + radius * Math.sin((Math.PI * (angle + 180)) / 180));
-                if (Math.abs(newX - curX) || Math.abs(newY - curY)) {
-                    yield nut.mouse.move(nut.straightTo({ x: newX, y: newY }));
-                }
+                yield nut.mouse.move(nut.straightTo({ x: newX, y: newY }));
                 (curX = newX), (curY = curY);
             }
             yield nut.mouse.releaseButton(nut.Button.LEFT);

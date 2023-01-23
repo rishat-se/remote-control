@@ -5,9 +5,10 @@
     "main": "index.js",
     "type": "module",
     "scripts": {
-        "start": "node ./index.js",
-        "start:dev": "nodemon ./index.js",
-        "start:dev:ws": "nodemon ./dist/index.js",
+        "start": "node ./dist/index.js",
+        "start:front": "node ./index.js",
+        "start:dev:front": "nodemon ./index.js",
+        "start:dev:wss": "nodemon ./dist/index.js",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "author": "Andrei Auchynnikau",

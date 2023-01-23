@@ -9,12 +9,15 @@ export const cmdRouter = async (rawCmd: string, sendResponse: (response: string)
         switch (true) {
             case cmd[0].startsWith('mouse'):
                 response = (await mouseCmdHandler(cmd)) || response;
+                console.log(`completed command: ${response}`);
                 break;
             case cmd[0].startsWith('prnt_scrn'):
                 response = (await prntscrnCmdHandler()) || response;
+                console.log(`completed command: prnt_scrn`);
                 break;
             case cmd[0].startsWith('draw'):
                 await drawCmdHandler(cmd);
+                console.log(`completed command: ${response}`);
                 break;
             default:
                 throw new Error('Invalid Command');

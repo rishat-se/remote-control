@@ -26,14 +26,11 @@ export const prntscrnCmdHandler = async () => {
     const region = await calcSafeRegion(curX, curY);
     const screenBGR = await nut.screen.grabRegion(region);
     const screenRGB = await screenBGR.toRGB();
-    const image = new Jimp(
-        {
-            data: screenRGB.data,
-            width: screenRGB.width,
-            height: screenRGB.height,
-        },
-        (err, image) => {}
-    );
+    const image = new Jimp({
+        data: screenRGB.data,
+        width: screenRGB.width,
+        height: screenRGB.height,
+    });
     const pngImage = await image.getBufferAsync(Jimp.MIME_PNG);
     return `prnt_scrn ${pngImage.toString('base64')}`;
 };

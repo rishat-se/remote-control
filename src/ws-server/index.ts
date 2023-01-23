@@ -1,13 +1,15 @@
 import { WebSocketServer, createWebSocketStream } from 'ws';
-import { PORT } from './constants.js';
+import { WS_PORT } from './constants.js';
 import { cmdRouter } from './routes/cmd-router.js';
 
-const wss = new WebSocketServer({ port: PORT });
+const wss = new WebSocketServer({ port: WS_PORT });
+
+console.log(`Start WebSocket server on localhost port: ${WS_PORT}!`);
 
 wss.on('connection', (ws) => {
     const wsStream = createWebSocketStream(ws, { decodeStrings: false });
     wsStream.on('data', (chunk) => {
-        console.log('received: %s', chunk.toString());
+        console.log('received command: %s', chunk.toString());
         cmdRouter(chunk.toString(), (response: string) => {
             wsStream.write(response);
         });
@@ -19,6 +21,6 @@ wss.on('connection', (ws) => {
 });
 
 process.on('SIGINT', () => {
-    console.log('GoodBye!');
+    console.log('Stop WebSocket server');
     wss.close();
 });
